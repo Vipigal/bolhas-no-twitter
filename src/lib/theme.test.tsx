@@ -2,44 +2,64 @@ import { renderHook } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { applyTheme, browserStorage, DEFAULT_THEME, readTheme, THEME_KEY, useTheme, writeTheme } from "./theme";
 
-describe("tema", () => {
-  it("padrão escuro sem armazenamento, com valor inválido ou se o acesso lançar", () => {
+const throwing = () => {
+  throw new Error("SecurityError");
+};
+
+describe("readTheme", () => {
+  it("cai no escuro sem armazenamento", () => {
     expect(readTheme(() => undefined)).toBe("dark");
-    expect(readTheme(() => ({ getItem: () => "sepia" }))).toBe("dark");
-    expect(
-      readTheme(() => {
-        throw new Error("SecurityError");
-      }),
-    ).toBe("dark");
-  });
-  it("respeita a escolha salva e não quebra ao gravar sem armazenamento", () => {
-    expect(readTheme(() => ({ getItem: () => "light" }))).toBe("light");
-    expect(() =>
-      writeTheme(() => {
-        throw new Error("SecurityError");
-      }, "light"),
-    ).not.toThrow();
   });
 
+  it("cai no escuro com valor salvo inválido", () => {
+    expect(readTheme(() => ({ getItem: () => "sepia" }))).toBe("dark");
+  });
+
+  it("cai no escuro se o acesso ao armazenamento lançar", () => {
+    expect(readTheme(throwing)).toBe("dark");
+  });
+
+  it("respeita a escolha salva", () => {
+    expect(readTheme(() => ({ getItem: () => "light" }))).toBe("light");
+  });
+
+  it("lê do localStorage do navegador a escolha gravada nele", () => {
+    window.localStorage.setItem(THEME_KEY, "light");
+    expect(readTheme(browserStorage)).toBe("light");
+  });
+});
+
+describe("writeTheme", () => {
   it("grava a escolha no armazenamento", () => {
     const store = { setItem: vi.fn() };
     writeTheme(() => store, "light");
     expect(store.setItem).toHaveBeenCalledWith(THEME_KEY, "light");
   });
-  it("não grava quando não há armazenamento", () => {
+
+  it("não quebra se o acesso ao armazenamento lançar", () => {
+    expect(() => writeTheme(throwing, "light")).not.toThrow();
+  });
+
+  it("não quebra sem armazenamento", () => {
     expect(() => writeTheme(() => undefined, "light")).not.toThrow();
   });
-  it("lê do localStorage do navegador a escolha gravada nele", () => {
-    window.localStorage.setItem(THEME_KEY, "light");
-    expect(readTheme(browserStorage)).toBe("light");
-  });
+});
+
+describe("applyTheme", () => {
   it("aplica o tema no atributo data-theme da raiz", () => {
     applyTheme("light");
     expect(document.documentElement.dataset.theme).toBe("light");
   });
-  it("fora do provedor, usa o tema padrão e alternar não faz nada", () => {
+});
+
+describe("useTheme fora do provedor", () => {
+  it("usa o tema padrão", () => {
     const { result } = renderHook(() => useTheme());
     expect(result.current.theme).toBe(DEFAULT_THEME);
+  });
+
+  it("ignora o pedido de alternar", () => {
+    const { result } = renderHook(() => useTheme());
     expect(() => result.current.toggle()).not.toThrow();
   });
 });
