@@ -6,7 +6,7 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   // data/export/ é servido na raiz: fetch("/index.json"), fetch("/eleicoes/tweets.json")
-  publicDir: "../data/export",
+  publicDir: "data/export",
   test: {
     environment: "node",
     include: ["src/**/*.test.ts"],
