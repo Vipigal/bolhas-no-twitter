@@ -21,6 +21,10 @@ describe("splitCitations", () => {
     expect(splitCitations("sem nada")).toEqual([{ kind: "text", text: "sem nada" }]);
   });
 
+  it("ignora colchetes que só têm separadores", () => {
+    expect(splitCitations("o [,;] texto")).toEqual([{ kind: "text", text: "o [,;] texto" }]);
+  });
+
   it("ignora colchetes que não trazem ids", () => {
     expect(splitCitations("o [sic] texto")).toEqual([{ kind: "text", text: "o [sic] texto" }]);
   });

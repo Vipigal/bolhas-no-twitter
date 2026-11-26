@@ -36,6 +36,12 @@ describe("bubbleSentence", () => {
     ).toBe("14.732 pessoas, 44% do evento. 52% do que esta bolha retuíta aparece nas outras, mais no Grupo 1.");
   });
 
+  it("diz 'menos de 1%' quando quase nada do que a bolha retuíta aparece nas outras", () => {
+    expect(bubbleSentence({ ...base, shared: 0.004, shared_with: { "0": 0.003 } }, label)).toBe(
+      "14.732 pessoas, 44% do evento. Só menos de 1% do que esta bolha retuíta aparece nas outras.",
+    );
+  });
+
   it("omite o compartilhamento quando a métrica não existe", () => {
     expect(bubbleSentence({ ...base, shared: null, shared_with: null }, label)).toBe("14.732 pessoas, 44% do evento.");
   });
@@ -50,6 +56,13 @@ describe("pairSummary", () => {
     expect(pairSummary(a, b)).toEqual({
       title: "Grupo 1 e Grupo 2: quase nada em comum",
       lede: "1,2% do que o Grupo 1 retuíta circula no Grupo 2, e 1,5% no sentido contrário.",
+    });
+  });
+
+  it("trata a falta de shared_with como nenhum compartilhamento", () => {
+    expect(pairSummary({ ...a, shared_with: null }, { ...b, shared_with: null })).toEqual({
+      title: "Grupo 1 e Grupo 2: quase nada em comum",
+      lede: "menos de 1% do que o Grupo 1 retuíta circula no Grupo 2, e menos de 1% no sentido contrário.",
     });
   });
 

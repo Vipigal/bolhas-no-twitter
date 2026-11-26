@@ -19,6 +19,14 @@ describe("timelineScale", () => {
   });
 });
 
+describe("timelineScale com um único dia", () => {
+  it("põe todos os eventos em 0 e conta zero dias", () => {
+    const scale = timelineScale(["2023-01-08", "2023-01-08"]);
+    expect(scale.days).toBe(0);
+    expect(scale.at("2023-01-08")).toBe(0);
+  });
+});
+
 describe("dayMonth", () => {
   it("formata a data como dia/mês sem zero à esquerda", () => {
     expect(dayMonth("2023-01-08")).toBe("8/1");

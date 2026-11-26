@@ -95,6 +95,17 @@ describe("segmentText", () => {
     expect(out[out.length - 1]).toEqual({ kind: "text", text: " b" });
   });
 
+  it("remove também o espaço entre mídias que terminam o texto", () => {
+    const media = (start: number, end: number, k: string) => ({
+      start,
+      end,
+      url: `https://t.co/${k}`,
+      media_key: `3_${k}`,
+    });
+    const entities: TweetEntities = { ...none, urls: [media(2, 16, "1"), media(17, 31, "2")] };
+    expect(segmentText("a https://t.co/1 https://t.co/2", entities, TWEET_URL)).toEqual([{ kind: "text", text: "a" }]);
+  });
+
   it("descarta entidade com offset fora do texto", () => {
     const entities: TweetEntities = { ...none, hashtags: [{ start: 10, end: 14, tag: "x" }] };
     expect(segmentText("curto", entities, TWEET_URL)).toEqual([{ kind: "text", text: "curto" }]);

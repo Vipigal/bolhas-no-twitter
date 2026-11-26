@@ -1,7 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { bubblePath, pickBubble, pickCompare } from "./paths";
+import { bubblePath, eventPath, pickBubble, pickCompare } from "./paths";
 
 const clusters = [{ community: 1 }, { community: 0 }, { community: 2 }];
+
+describe("eventPath", () => {
+  it("aponta para a página do evento", () => {
+    expect(eventPath("ev")).toBe("/ev");
+  });
+});
 
 describe("bubblePath", () => {
   it("aponta para a bolha dentro da página do evento", () => {
