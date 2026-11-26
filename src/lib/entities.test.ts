@@ -6,7 +6,7 @@ const TWEET_URL = "https://x.com/i/web/status/1";
 const none: TweetEntities = { urls: [], hashtags: [], mentions: [] };
 
 describe("segmentText", () => {
-  it("(a) hashtag + menção + url em texto ASCII", () => {
+  it("separa menção, hashtag e url do texto ao redor", () => {
     //            0123456789012345678901234567890123456
     const text = "Oi @ana veja #stf em https://t.co/abc";
     const entities: TweetEntities = {
@@ -32,7 +32,7 @@ describe("segmentText", () => {
     ]);
   });
 
-  it("(b) offsets são em code points: emoji antes da hashtag", () => {
+  it("conta os offsets em code points, com emoji antes da hashtag", () => {
     const text = "🚨 #STF"; // 🚨 = 1 code point, 2 unidades UTF-16
     const entities: TweetEntities = { ...none, hashtags: [{ start: 2, end: 6, tag: "STF" }] };
     expect(segmentText(text, entities, TWEET_URL)).toEqual([
@@ -41,7 +41,7 @@ describe("segmentText", () => {
     ]);
   });
 
-  it("(c) url com media_key vira mídia, sai do fim do texto e hasMedia é true", () => {
+  it("tira do fim do texto a url que é mídia", () => {
     const text = "Cavalo socorrido https://t.co/m1";
     const entities: TweetEntities = {
       ...none,
@@ -57,11 +57,21 @@ describe("segmentText", () => {
       ],
     };
     expect(segmentText(text, entities, TWEET_URL)).toEqual([{ kind: "text", text: "Cavalo socorrido" }]);
+  });
+
+  it("hasMedia é true quando há url com media_key", () => {
+    const entities: TweetEntities = {
+      ...none,
+      urls: [{ start: 0, end: 15, url: "https://t.co/m1", media_key: "3_1" }],
+    };
     expect(hasMedia(entities)).toBe(true);
+  });
+
+  it("hasMedia é false sem url de mídia", () => {
     expect(hasMedia(none)).toBe(false);
   });
 
-  it("(d) entidades sobrepostas: mantém a primeira", () => {
+  it("mantém a primeira entidade quando duas se sobrepõem", () => {
     const text = "#abcd ef";
     const entities: TweetEntities = {
       ...none,
@@ -74,7 +84,7 @@ describe("segmentText", () => {
     ]);
   });
 
-  it("(e) sem entidades → um segmento de texto", () => {
+  it("devolve um só segmento de texto sem entidades", () => {
     expect(segmentText("Só texto", none, TWEET_URL)).toEqual([{ kind: "text", text: "Só texto" }]);
   });
 
