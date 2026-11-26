@@ -8,7 +8,15 @@ export default defineConfig({
   // data/export/ é servido na raiz: fetch("/index.json"), fetch("/eleicoes/tweets.json")
   publicDir: "data/export",
   test: {
-    environment: "node",
-    include: ["src/**/*.test.ts"],
+    environment: "jsdom",
+    include: ["src/**/*.test.{ts,tsx}"],
+    setupFiles: ["src/test/setup.ts"],
+    coverage: {
+      provider: "v8",
+      include: ["src/**"],
+      exclude: ["src/main.tsx", "src/types.ts", "src/**/*.test.*", "src/test/**"],
+      reporter: [["text", { skipFull: false }], "lcov"],
+      reportsDirectory: "coverage",
+    },
   },
 });
