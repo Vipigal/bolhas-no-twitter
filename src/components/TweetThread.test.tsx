@@ -136,11 +136,12 @@ describe("TweetThread, foco numa citação", () => {
     act(() => void vi.advanceTimersByTime(1600));
     expect(tweetItem(3)).not.toHaveClass("cite-flash");
   });
-  it("centraliza de novo enquanto a página assenta", () => {
+  it("centraliza de novo o tweet citado depois que a página assenta", () => {
     vi.useFakeTimers();
     renderThread(slotsUpTo(5), { focus: focusOn(3) });
+    vi.mocked(Element.prototype.scrollIntoView).mockClear();
     act(() => void vi.advanceTimersByTime(1200));
-    expect(Element.prototype.scrollIntoView).toHaveBeenCalledTimes(4);
+    expect(Element.prototype.scrollIntoView).toHaveBeenCalled();
   });
   it("abre mais tweets para alcançar uma citação fora da primeira página", () => {
     renderThread(slotsUpTo(45), { focus: focusOn(30) });
@@ -149,5 +150,6 @@ describe("TweetThread, foco numa citação", () => {
   it("não rola nem destaca quando o tweet citado não está na lista", () => {
     renderThread(slotsUpTo(5), { focus: { tweetId: "999999", seq: 1 } });
     expect(Element.prototype.scrollIntoView).not.toHaveBeenCalled();
+    expect(document.querySelector(".cite-flash")).toBeNull();
   });
 });
