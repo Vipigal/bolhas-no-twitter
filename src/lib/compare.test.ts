@@ -1,52 +1,27 @@
 import { describe, expect, it } from "vitest";
-import type { Slot, SlotOrigin, Tweet } from "../types";
+import type { Slot, SlotOrigin } from "../types";
+import { buildSlot, buildTweet } from "../test/fixtures";
 import { comparePair } from "./compare";
 
-const tweet: Tweet = {
-  id: "t",
-  text: "",
-  created_at: "2023-01-08T15:00:00Z",
-  lang: null,
-  source: null,
-  possibly_sensitive: null,
-  reply_settings: null,
-  conversation_id: null,
-  in_reply_to_user_id: null,
-  metrics: {
-    retweet_count: null,
-    reply_count: null,
-    like_count: null,
-    quote_count: null,
-    bookmark_count: null,
-    impression_count: null,
-  },
-  entities: { urls: [], hashtags: [], mentions: [] },
-  referenced_tweets: [],
-  url: "",
-  media: [],
-};
+const tweet = buildTweet({ id: "t", url: "" });
 
 function slot(community: number, rank: number, tweetId: string, rt: number, origin: SlotOrigin = "amplified", hydrated = true): Slot {
-  return {
+  return buildSlot({
     community,
     group: community,
     rank,
-    k: 100,
     origin,
-    lift: null,
     tweet_id: tweetId,
     rt_cluster: rt,
     rt_graph: rt,
     rt_event: rt,
     purity: 1,
-    also_in: [],
     status: hydrated ? "hydrated" : "not_found",
-    error: null,
     tweet: hydrated ? tweet : null,
     author_id: null,
     author: null,
     author_status: null,
-  };
+  });
 }
 
 const slots = [

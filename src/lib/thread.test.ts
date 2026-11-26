@@ -1,52 +1,25 @@
 import { describe, expect, it } from "vitest";
-import type { Slot, SlotOrigin, SlotStatus, Tweet } from "../types";
+import type { Slot, SlotOrigin, SlotStatus } from "../types";
+import { buildSlot, buildTweet } from "../test/fixtures";
 import { buildThread, gapText, slotLabel } from "./thread";
 
-const tweet: Tweet = {
-  id: "t",
-  text: "",
-  created_at: "2023-01-08T15:00:00Z",
-  lang: null,
-  source: null,
-  possibly_sensitive: null,
-  reply_settings: null,
-  conversation_id: null,
-  in_reply_to_user_id: null,
-  metrics: {
-    retweet_count: null,
-    reply_count: null,
-    like_count: null,
-    quote_count: null,
-    bookmark_count: null,
-    impression_count: null,
-  },
-  entities: { urls: [], hashtags: [], mentions: [] },
-  referenced_tweets: [],
-  url: "https://x.com/i/web/status/t",
-  media: [],
-};
+const tweet = buildTweet({ id: "t", url: "https://x.com/i/web/status/t" });
 
 function slot(rank: number, status: SlotStatus, origin: SlotOrigin = "amplified", community = 1): Slot {
-  return {
+  return buildSlot({
     community,
-    group: 1,
     rank,
-    k: 100,
     origin,
-    lift: null,
     tweet_id: `${origin}-${rank}`,
     rt_cluster: 100 - rank,
     rt_graph: 200,
     rt_event: 300,
-    purity: 0.5,
-    also_in: [],
     status,
-    error: null,
     tweet: status === "hydrated" ? tweet : null,
     author_id: null,
     author: null,
     author_status: null,
-  };
+  });
 }
 
 describe("slotLabel", () => {
