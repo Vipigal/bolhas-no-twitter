@@ -31,6 +31,6 @@ describe("TweetText", () => {
   });
   it("não renderiza nada visível sem segmentos", () => {
     const { container } = render(<TweetText segments={[]} />);
-    expect(container).toHaveTextContent("");
+    expect(container.querySelector("p")).toBeEmptyDOMElement();
   });
 });
