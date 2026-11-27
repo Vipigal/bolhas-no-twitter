@@ -396,7 +396,7 @@ Fora desta execução:
 | `@testing-library/jest-dom` fica fixado na versão 7 | a versão 8 exige Vitest 5 | o dono | detalhe | só as dependências de teste | 7c21915 |
 | Os cinco blocos da onda 1 (os quatro de testes de unidade e o e2e) rodam ao mesmo tempo, acima do teto de três da skill | o usuário pediu para acelerar. Os arquivos são disjuntos e cada bloco mede a cobertura num diretório próprio | o dono | detalhe | nenhuma tarefa | — |
 | O servidor do e2e usa `vite build` e `vite preview`, sem o `tsc -b` | o e2e não deve falhar por erro de tipo em teste de unidade. O typecheck já roda no job de unidade | o dono | detalhe | o e2e | — |
-| O commit do CI espera localmente até o token do `gh` ganhar o escopo `workflow` | o GitHub recusa o push de `.github/workflows` sem esse escopo. Os outros commits seguem sendo enviados | aguardando você | pilar | o CI, o Codecov e o gate de cobertura | — |
+| O commit do CI espera localmente até o token do `gh` ganhar o escopo `workflow` | o GitHub recusa o push de `.github/workflows` sem esse escopo. Os outros commits seguem sendo enviados | você (escopo liberado) | pilar | o CI, o Codecov e o gate de cobertura | 2c3bd30 |
 | O stub de `fetch` que responde JSON por URL foi centralizado em `src/test/fetch.ts` | estava duplicado em 4 arquivos de teste das páginas | o dono | detalhe | só os testes | — |
 | Os testes que esbarram no cache dos loaders isolam o cache com `vi.resetModules` e import dinâmico, sem mudar código de produção | a revisão apontou dependência de ordem e slugs únicos como contorno frágil | o dono | detalhe | só os testes | — |
 | O gate de cobertura vale para linhas, statements e funções a 80%, com CSS fora do cálculo. O Codecov cobra 80% do projeto, com 1% de tolerância | como planejado. O CSS aparecia com 0% sem ser código | o dono | detalhe | o CI | — |
@@ -549,3 +549,18 @@ está local.
   README sai sem o link de produção, como o usuário pediu.
 - **Próximo:** o usuário libera o escopo `workflow`. O dono faz o push, acompanha o primeiro run e
   corrige o que falhar no macOS ou no Windows.
+
+**Checkpoint de implementação** · 2026-11-27 · T2 e T9 (CI no ar)
+
+- **Feito:**
+  - CI publicado depois que o usuário liberou o escopo `workflow`.
+  - Primeiro run: https://github.com/Vipigal/bolhas-no-twitter/actions/runs/45914320052. Os seis
+    jobs passaram (`unit` e `e2e` em Ubuntu, macOS e Windows).
+  - Relatório no Codecov: https://app.codecov.io/gh/Vipigal/bolhas-no-twitter, com 97,3% (578 de
+    594 linhas, 36 arquivos). O Codecov conta como parcial a linha com branch descoberto, por isso o
+    número é menor que os 99,8% do Vitest.
+- **Divergiu do spec:** nada.
+- **Problema e correção:** o envio ao Codecov falhou três vezes com "Repository not found". Primeiro
+  faltava dar ao app do Codecov acesso ao repo novo. Depois, o `CODECOV_TOKEN` era o token de outro
+  repo. O usuário corrigiu os dois, e a quarta tentativa enviou o relatório.
+- **Próximo:** o deploy na Vercel (quando o usuário liberar) e o vídeo.
