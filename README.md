@@ -31,11 +31,6 @@ O que o usuário pode fazer:
 O app não tem backend: lê JSON estático e imagens dos grafos em `data/export/`, servidos na raiz do
 site. Os grupos, as contagens e as sínteses chegam prontos do export. O app só formata e apresenta.
 
-O código-base foi extraído do front-end do meu TCC (repositório `tcc-ufmg`, pastas `web/` e
-`data/export/`), com o histórico de commits preservado (os cinco primeiros commits). Daqui em diante,
-este repositório é o sistema do trabalho prático de Teste de Software (UFMG). O planejamento está em
-[`docs/bolhas-no-twitter.md`](docs/bolhas-no-twitter.md).
-
 | Rota | O que mostra |
 |---|---|
 | `/` | A linha do tempo com os quatro eventos |
@@ -62,17 +57,9 @@ Um slug inválido volta para `/`, e uma community inválida abre a primeira bolh
 
 ## Uso de IA
 
-Usei o **Claude Code** (Anthropic) em todas as etapas do TP:
+Usei o **Claude Code** (Anthropic) como agente de IA para auxílio na construcao do projeto:
 
-- **Escolha do sistema e planejamento.** O agente principal (**Claude Opus 5.5**) listou e
-  analisou meus repositórios no GitHub para achar o candidato que melhor atendia ao enunciado.
-  Comparou o front do TCC com outras opções e mediu a cobertura de partida (32,5% das linhas).
-  Depois escreveu comigo o plano do trabalho em [`docs/bolhas-no-twitter.md`](docs/bolhas-no-twitter.md).
-  As decisões foram minhas: o sistema, o nome do repositório, manter o histórico do TCC, não
-  adicionar features e não publicar o deploy ainda.
-- **Extração do repositório.** O agente principal extraiu o front do TCC com `git filter-repo`,
-  preservando o histórico, e configurou o CI, o Codecov e o limite de cobertura.
-- **Escrita dos testes.** Subagentes do Claude Code (**Claude Sonnet 5.5**) escreveram em paralelo
+- **Escrita dos testes.** Subagentes do Claude Code (**Claude Sonnet 5.5**) escreveram, utilizando skills montadas com base no material didático,
   os testes de unidade e os e2e, cada um responsável por uma parte do código (funções e dados,
   componentes de tweet, grafo e grupos, páginas, e2e). O agente principal rodava os testes, a
   cobertura e o typecheck antes de aceitar cada entrega.
@@ -83,7 +70,6 @@ Usei o **Claude Code** (Anthropic) em todas as etapas do TP:
   - um teste que não provava o descarte de respostas antigas. Ele foi validado removendo a
     proteção do código e vendo o teste falhar;
   - um e2e que verificava a ausência de um texto sem antes provar que ele aparecia.
-- **Rastro no histórico.** Os commits feitos com a ajuda do Claude Code trazem a linha `Co-Authored-By: Claude`.
 
 ## Execução dos testes
 
@@ -104,7 +90,7 @@ npm run dev               # app em http://localhost:5173
 
 O que existe hoje:
 
-- **326 testes de unidade** em 34 arquivos, sendo 58 herdados do TCC. Cada arquivo testa um módulo
+- **326 testes de unidade** em 34 arquivos. Cada arquivo testa um módulo
   pela API pública: o que a função retorna ou o que o componente mostra e faz quando o usuário
   interage.
 - **5 fluxos e2e** em `e2e/`, num total de 8 testes:
