@@ -3,13 +3,25 @@
 [![ci](https://github.com/Vipigal/bolhas-no-twitter/actions/workflows/ci.yml/badge.svg)](https://github.com/Vipigal/bolhas-no-twitter/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/Vipigal/bolhas-no-twitter/graph/badge.svg)](https://codecov.io/gh/Vipigal/bolhas-no-twitter)
 
+**Sistema em produção:** https://polarizacao-br.vercel.app/
+
 ## Integrantes
 
 - Vinicius Pinho Galvao
 
 ## Sobre o sistema
 
-Leitor das bolhas de retweet no Twitter brasileiro em quatro eventos políticos entre 2022 e 2023:
+Uma aplicação web que mostra como lados opostos do Twitter brasileiro viveram os mesmos
+acontecimentos políticos, da campanha de 2022 ao 8 de janeiro de 2023. Para cada evento, as pessoas
+que retuitaram as mesmas coisas formam um grupo, a que chamamos de bolha. Ninguém é classificado de
+antemão: os grupos surgem só dos retweets. Depois, o sistema mostra o que circulou dentro de cada
+bolha e o quanto ela se sobrepõe às outras.
+
+Os dados vieram de uma pesquisa acadêmica que fiz antes deste trabalho. Ela coletou os tweets,
+formou os grupos e gerou as sínteses. Este sistema é a interface web que apresenta esses
+resultados ao público.
+
+Os quatro eventos cobertos são:
 
 - a mobilização de 7 de setembro;
 - o caso Roberto Jefferson;
